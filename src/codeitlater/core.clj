@@ -1,6 +1,13 @@
-(ns codeitlater.core)
+(ns codeitlater.core
+  (:gen-class))
 
-(defn foo
-  "I don't do a whole lot."
-  [x]
-  (println x "Hello, World!"))
+(defn -main []
+  (println "Hello, World!"))
+
+(defn make-pattern [commentMark]
+  (re-pattern (str commentMark ".+")))
+
+(defn read-comments-inline [pattern line]
+  (let [result (re-find pattern line)]
+    result))
+
