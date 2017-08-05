@@ -11,3 +11,5 @@
   (let [result (re-find pattern line)]
     result))
 
+(defn read-file [])
+
