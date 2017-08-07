@@ -11,5 +11,8 @@
   (let [result (re-find pattern line)]
     result))
 
-(defn read-file [])
-
+(defn read-file [filepath]
+  (with-open [codefile (clojure.java.io/reader filepath)]
+    (doseq [thisline (line-seq codefile)]
+      (println (read-comments-inline (make-pattern "//") thisline))
+      )))
