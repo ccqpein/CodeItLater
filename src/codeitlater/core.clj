@@ -1,8 +1,7 @@
 (ns codeitlater.core
   (:gen-class))
 
-(defn -main []
-  (println "Hello, World!"))
+(def testMark "//")
 
 (defn make-pattern [commentMark]
   (re-pattern (str commentMark ".+")))
@@ -14,5 +13,8 @@
 (defn read-file [filepath]
   (with-open [codefile (clojure.java.io/reader filepath)]
     (doseq [thisline (line-seq codefile)]
-      (println (read-comments-inline (make-pattern "//") thisline))
+      (println (read-comments-inline (make-pattern testMark) thisline))
       )))
+
+(defn -main []
+  (println (read-comments-inline (make-pattern testMark) "aaa//test")))
