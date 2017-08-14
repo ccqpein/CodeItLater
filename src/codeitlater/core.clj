@@ -23,3 +23,4 @@
 
 (defn -main []
   (println (read-comments-inline (make-pattern testMark) "aaa//test")))
+
