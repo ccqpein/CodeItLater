@@ -1,3 +1,3 @@
 # Introduction to codeitlater
 
-TODO: write [great documentation](http://jacobian.org/writing/what-to-write/)
+TODO: Delete commentMark and filter different type of comment
