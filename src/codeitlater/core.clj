@@ -2,6 +2,7 @@
   (:gen-class))
 
 (def testMark "//")
+(def testKeyword "TODO") ; using keyword to filter which is which
 
 (defn make-pattern [commentMark]
   (re-pattern (str commentMark ".+")))
