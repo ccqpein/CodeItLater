@@ -22,8 +22,9 @@
         (list lineNum comment))
       )))
 
-(defn -main []
+(defn -main [& args]
+  (println args)
   (println (read-comments-inline (make-pattern testMark) "aaa//test"))
-  (println (read-comments-in-file "/Users/cchen386/Desktop/log"
+  (println (read-comments-in-file "/Users/ccQ/Desktop/log"
                                   (partial read-comments-inline (make-pattern testMark)))))
 
