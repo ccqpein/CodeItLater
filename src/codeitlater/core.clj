@@ -1,4 +1,5 @@
 (ns codeitlater.core
+  (:require [clojure.java.io :as io])
   (:gen-class))
 
 (def testMark "//")
@@ -22,9 +23,22 @@
         (list lineNum comment))
       )))
 
+(defn get-all-files
+  ([]
+   (doall (map #(.getPath %) (file-seq (io/file ".")))))
+  ([root]
+   (doall (map #(.getPath %) (file-seq (io/file root)))))
+  ([root & filetypes]
+   (let [typepatterns (for [filetype filetypes] (re-pattern (str filetype "$")))]
+     (for [thisfile (doall (file-seq (io/file root)))
+           typepattern typepatterns
+           :let [filename (.getPath thisfile)]
+           :when (re-find typepattern filename)]
+       filename)))
+  )
+
 (defn -main [& args]
   (println args)
   (println (read-comments-inline (make-pattern testMark) "aaa//test"))
   (println (read-comments-in-file "/Users/ccQ/Desktop/log"
                                   (partial read-comments-inline (make-pattern testMark)))))
-
