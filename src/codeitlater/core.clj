@@ -8,7 +8,6 @@
 (defn make-pattern [commentMark]
   (re-pattern (str commentMark ".+")))
 
-;TODO: delete commentMark and filter different type of comment
 (defn read-comments-inline [pattern line]
   (let [result (re-find pattern line)]
     result)) 
@@ -24,21 +23,39 @@
       )))
 
 (defn get-all-files
+  "return a lazy sequence including all files"
   ([]
-   (doall (map #(.getPath %) (file-seq (io/file ".")))))
+   (map #(.getPath %) (file-seq (io/file "."))))
   ([root]
-   (doall (map #(.getPath %) (file-seq (io/file root)))))
-  ([root & filetypes]
-   (let [typepatterns (for [filetype filetypes] (re-pattern (str filetype "$")))]
-     (for [thisfile (doall (file-seq (io/file root)))
-           typepattern typepatterns
-           :let [filename (.getPath thisfile)]
-           :when (re-find typepattern filename)]
-       filename)))
+   (map #(.getPath %) (file-seq (io/file root))))
   )
+
+(defn read-files ;TODO: directory format
+  "commentMarkFunc is a curry function to give read-comments-in-file
+=> (partial read-comments-inline (make-pattern commentMark))"
+  ([commentMarkFunc]
+   (doall (for [filepath (get-all-files)]
+            (conj (read-comments-in-file filepath
+                                         commentMarkFunc)
+                  filepath))))
+  ([commentMarkFunc root]
+   (doall (for [filepath (get-all-files root)]
+            (conj (read-comments-in-file filepath
+                                         commentMarkFunc)
+                  filepath))))
+  ([commentMarkFunc root & filetypes]
+   (let [typepatterns (for [filetype filetypes
+                            :when (not= "" filetype)]
+                        (re-pattern (str ".+" filetype "$")))]
+     (doall (for [filepath (get-all-files root)
+                  typepattern typepatterns
+                  :when (re-matches typepattern filepath)]
+              (conj (read-comments-in-file filepath
+                                           commentMarkFunc)
+                    filepath))))))
 
 (defn -main [& args]
   (println args)
   (println (read-comments-inline (make-pattern testMark) "aaa//test"))
-  (println (read-comments-in-file "/Users/ccQ/Desktop/log"
-                                  (partial read-comments-inline (make-pattern testMark)))))
+  (println (read-files (partial read-comments-inline (make-pattern ";")) "./src" "clj" ""))
+)
