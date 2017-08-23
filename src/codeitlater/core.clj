@@ -6,7 +6,7 @@
 (def testKeyword "TODO") ; using keyword to filter which is which
 
 (defn make-pattern [commentMark]
-  (re-pattern (str commentMark ".+")))
+  (re-pattern (str "[^\"]" commentMark ".+")))
 
 (defn read-comments-inline [pattern line]
   (let [result (re-find pattern line)]
@@ -56,6 +56,5 @@
 
 (defn -main [& args]
   (println args)
-  (println (read-comments-inline (make-pattern testMark) "aaa//test"))
   (println (read-files (partial read-comments-inline (make-pattern ";")) "./src" "clj" ""))
 )
