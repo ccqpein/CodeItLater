@@ -2,6 +2,7 @@
   (:require [clojure.test :refer :all]
             [codeitlater.core :refer :all]))
 
-(deftest a-test
-  (testing "FIXME, I fail."
-    (is (= 0 1))))
+(deftest read-comment-inline-test
+  (testing "Read comment in line fail"
+    (is (= "// abc"
+            (read-comments-inline (make-pattern "//") "aaa // abc")))))
