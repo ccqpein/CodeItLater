@@ -3,10 +3,10 @@
   (:gen-class))
 
 (def testMark "//")
-(def testKeyword "TODO") ; using keyword to filter which is which
+(def testKeyword "TODO") ;:=using keyword to filter which is which
 
 (defn make-pattern [commentMark]
-  (re-pattern (str "[^\"]" commentMark ".+")))
+  (re-pattern (str "(?<=" commentMark "+:=)" ".+")))
 
 (defn read-comments-inline [pattern line]
   (let [result (re-find pattern line)]
@@ -30,7 +30,7 @@
    (map #(.getPath %) (file-seq (io/file root))))
   )
 
-(defn read-files ;TODO: directory format
+(defn read-files ;;:= TODO: directory format
   "commentMarkFunc is a curry function to give read-comments-in-file
 => (partial read-comments-inline (make-pattern commentMark))"
   ([commentMarkFunc]
