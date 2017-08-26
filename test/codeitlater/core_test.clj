@@ -4,5 +4,7 @@
 
 (deftest read-comment-inline-test
   (testing "Read comment in line fail"
-    (is (= "// abc"
-            (read-comments-inline (make-pattern "//") "aaa // abc")))))
+    (is (= "abc"
+           (read-comments-inline (make-pattern "//") "aaa //:= abc")))
+    (is (= "TODO: abc"
+           (read-comments-inline (make-pattern ";") "aaa ; ;:= TODO: abc")))))
