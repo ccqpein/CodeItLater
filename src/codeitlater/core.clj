@@ -1,8 +1,14 @@
 (ns codeitlater.core
-  (:require [clojure.java.io :as io])
+  (:require [clojure.java.io :as io]
+            [clojure.data.json :as json]
+            )
   (:gen-class))
 
-(def testKeyword "TODO") ;:=using keyword to filter which is which
+
+;;:= TODO: make JSON to map table
+(defn read-json [filepath]
+  )
+
 
 ;; This regex expression get help from: https://stackoverflow.com/questions/45848999/clojure-regex-delete-whitespace-in-pattern
 (defn make-pattern [commentMark]
@@ -19,7 +25,7 @@
     (let [count (atom 0)]
       (for [thisline (doall (line-seq codefile))
             :let [comment (pickcomment thisline)
-                  lineNum (swap! count inc)]
+                  lineNum (swap! count inc)] ;;:= atom?
             :when comment]
         (list lineNum comment))
       )))
