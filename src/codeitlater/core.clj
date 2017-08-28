@@ -6,8 +6,8 @@
 
 
 ;;:= TODO: make JSON to map table
-(defn read-json [filepath]
-  )
+(defn read-json []
+  (json/read-str (slurp "./src/codeitlater/comments.json")))
 
 
 ;; This regex expression get help from: https://stackoverflow.com/questions/45848999/clojure-regex-delete-whitespace-in-pattern
@@ -21,7 +21,7 @@
 
 
 (defn read-comments-in-file [filepath pickcomment] ;pickcomment is curry function
-  (with-open [codefile (clojure.java.io/reader filepath)]
+  (with-open [codefile (io/reader filepath)]
     (let [count (atom 0)]
       (for [thisline (doall (line-seq codefile))
             :let [comment (pickcomment thisline)
