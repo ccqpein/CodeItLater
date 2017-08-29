@@ -4,10 +4,11 @@
             )
   (:gen-class))
 
-
-;;:= TODO: make JSON to map table
-(defn read-json []
-  (json/read-str (slurp "./src/codeitlater/comments.json")))
+(defn read-json
+  ([]
+   (json/read-str (slurp "./src/codeitlater/comments.json")))
+  ([path]
+   (json/read-str (slurp "path/comments.json"))))
 
 
 ;; This regex expression get help from: https://stackoverflow.com/questions/45848999/clojure-regex-delete-whitespace-in-pattern
@@ -15,14 +16,15 @@
   (re-pattern (str commentMark "+:=\\s*" "(.+)")))
 
 
-(defn read-comments-inline [pattern line]
-  (let [result (re-find pattern line)]
+(defn read-comments-inline [commentMark line]
+  (let [result (re-find (make-pattern commentMark) line)]
     (second result))) 
 
 
-(defn read-comments-in-file [filepath pickcomment] ;pickcomment is curry function
+(defn read-comments-in-file [filepath commentMark]
   (with-open [codefile (io/reader filepath)]
-    (let [count (atom 0)]
+    (let [count (atom 0)
+          pickcomment (partial read-comments-inline commentMark)]
       (for [thisline (doall (line-seq codefile))
             :let [comment (pickcomment thisline)
                   lineNum (swap! count inc)] ;;:= atom?
@@ -42,30 +44,32 @@
 
 (defn read-files ;;:= TODO: directory format
   "commentMarkFunc is a curry function to give read-comments-in-file
-=> (partial read-comments-inline (make-pattern commentMark))"
-  ([commentMarkFunc]
+=> (partial read-comments-inline commentMark)"
+  ([commentDict]
    (doall (for [filepath (get-all-files)]
-            (conj (read-comments-in-file filepath
-                                         commentMarkFunc)
+            (conj (read-comments-in-file
+                   filepath (get commentDict (re-find #"(?<=\w)\..*$" filepath)))
                   filepath))))
-  ([commentMarkFunc root]
+  ([commentDict root]
    (doall (for [filepath (get-all-files root)]
-            (conj (read-comments-in-file filepath
-                                         commentMarkFunc)
+            (conj (read-comments-in-file
+                   filepath (get commentDict (re-find #"(?<=\w)\..*$" filepath)))
                   filepath))))
-  ([commentMarkFunc root & filetypes]
+  ([commentDict root & filetypes]
    (let [typepatterns (for [filetype filetypes
                             :when (not= "" filetype)]
-                        (re-pattern (str ".+" filetype "$")))]
+                        (list (re-pattern (str ".+" filetype "$"))
+                              (str "." filetype)))]
      (doall (for [filepath (get-all-files root)
                   typepattern typepatterns
-                  :when (re-matches typepattern filepath)]
-              (conj (read-comments-in-file filepath
-                                           commentMarkFunc)
+                  :when (re-matches (first typepattern) filepath)]
+              (conj (read-comments-in-file
+                     filepath (get commentDict (last typepattern)))
                     filepath))))))
 
 
 (defn -main [& args]
-  (println args)
-  (println (read-files (partial read-comments-inline (make-pattern ";")) "./src" "clj" ""))
+  (let [commentDict (read-json)]
+    (println args)
+    (println (read-files commentDict "./src" "clj" "")))
 )
