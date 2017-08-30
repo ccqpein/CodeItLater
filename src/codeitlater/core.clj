@@ -43,11 +43,10 @@
 
 
 (defn read-files ;;:= TODO: directory format
-  "commentMarkFunc is a curry function to give read-comments-in-file
-=> (partial read-comments-inline commentMark)"
+  "(partial read-comments-inline commentMark)"
   ([commentDict]
    (doall (for [filepath (get-all-files)]
-            (conj (read-comments-in-file
+            (conj (read-comments-in-file ;;:= Debug: if filepath is "." or other directory
                    filepath (get commentDict (re-find #"(?<=\w)\..*$" filepath)))
                   filepath))))
   ([commentDict root]
