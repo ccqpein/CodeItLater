@@ -45,14 +45,18 @@
 (defn read-files ;;:= TODO: directory format
   "(partial read-comments-inline commentMark)"
   ([commentDict]
-   (doall (for [filepath (get-all-files)]
-            (conj (read-comments-in-file ;;:= Debug: if filepath is "." or other directory
-                   filepath (get commentDict (re-find #"(?<=\w)\..*$" filepath)))
+   (doall (for [filepath (get-all-files)
+                :when (not (.isDirectory (io/file filepath)))
+                :let [mark (get commentDict (re-find #"(?<=\w)\..*$" filepath))]
+                :when mark]
+            (conj (read-comments-in-file filepath mark)
                   filepath))))
   ([commentDict root]
-   (doall (for [filepath (get-all-files root)]
-            (conj (read-comments-in-file
-                   filepath (get commentDict (re-find #"(?<=\w)\..*$" filepath)))
+   (doall (for [filepath (get-all-files root)
+                :when (not (.isDirectory (io/file filepath)))
+                :let [mark (get commentDict (re-find #"(?<=\w)\..*$" filepath))]
+                :when mark]
+            (conj (read-comments-in-file filepath mark)
                   filepath))))
   ([commentDict root & filetypes]
    (let [typepatterns (for [filetype filetypes
@@ -60,10 +64,12 @@
                         (list (re-pattern (str ".+" filetype "$"))
                               (str "." filetype)))]
      (doall (for [filepath (get-all-files root)
+                  :when (not (.isDirectory (io/file filepath)))
                   typepattern typepatterns
-                  :when (re-matches (first typepattern) filepath)]
-              (conj (read-comments-in-file
-                     filepath (get commentDict (last typepattern)))
+                  :when (re-matches (first typepattern) filepath)
+                  :let [mark (get commentDict (re-find #"(?<=\w)\..*$" filepath))]
+                  :when mark]
+              (conj (read-comments-in-file filepath (get commentDict (last typepattern)))
                     filepath))))))
 
 
