@@ -72,7 +72,8 @@
               (conj (read-comments-in-file filepath (get commentDict (last typepattern)))
                     filepath))))))
 
-
+;;:= TODO: make diferent behavior of deffirent args.
+;;:= TODO: make tags options
 (defn -main [& args]
   (let [commentDict (read-json)]
     (println args)
