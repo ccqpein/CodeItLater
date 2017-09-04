@@ -42,8 +42,9 @@
   )
 
 
-(defn read-files ;;:= TODO: directory format
-  "(partial read-comments-inline commentMark)"
+;;(partial read-comments-inline commentMark)
+(defn read-files
+  "Read all files depend on root path and file types, find comments inside and return."
   ([commentDict]
    (doall (for [filepath (get-all-files)
                 :when (not (.isDirectory (io/file filepath)))
@@ -58,7 +59,7 @@
                 :when mark]
             (conj (read-comments-in-file filepath mark)
                   filepath))))
-  ([commentDict root & filetypes]
+  ([commentDict root filetypes]
    (let [typepatterns (for [filetype filetypes
                             :when (not= "" filetype)]
                         (list (re-pattern (str ".+" filetype "$"))
@@ -75,7 +76,9 @@
 ;;:= TODO: make diferent behavior of deffirent args.
 ;;:= TODO: make tags options
 (defn -main [& args]
-  (let [commentDict (read-json)]
+  (let [commentDict (read-json)
+        [root & filetypes] args]
     (println args)
-    (println (read-files commentDict "./src" "clj" "")))
+    (println filetypes)
+    (println (read-files commentDict root filetypes)))
 )
