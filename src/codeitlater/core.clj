@@ -74,11 +74,11 @@
                     filepath))))))
 
 ;;:= TODO: make diferent behavior of deffirent args.
-;;:= TODO: make tags options
+;;:= TODO: make tags options, for example, -json file.json
 (defn -main [& args]
   (let [commentDict (read-json)
         [root & filetypes] args]
-    (println args)
-    (println filetypes)
+    ;(println args)
+    ;(println filetypes)
     (println (read-files commentDict root filetypes)))
 )
