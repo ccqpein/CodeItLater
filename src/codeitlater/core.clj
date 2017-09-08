@@ -6,9 +6,9 @@
 
 (defn read-json
   ([]
-   (json/read-str (slurp "./src/codeitlater/comments.json")))
+   (json/read-str (slurp "/Users/cchen386/Desktop/codeitlater/src/codeitlater/comments.json")))
   ([path]
-   (json/read-str (slurp "path/comments.json"))))
+   (json/read-str (slurp (str path "/comments.json")))))
 
 
 ;; This regex expression get help from: https://stackoverflow.com/questions/45848999/clojure-regex-delete-whitespace-in-pattern
@@ -48,14 +48,14 @@
   ([commentDict]
    (doall (for [filepath (get-all-files)
                 :when (not (.isDirectory (io/file filepath)))
-                :let [mark (get commentDict (re-find #"(?<=\w)\..*$" filepath))]
+                :let [mark (get commentDict (re-find #"(?<=\w)\.\w+$" filepath))]
                 :when mark]
             (conj (read-comments-in-file filepath mark)
                   filepath))))
   ([commentDict root]
    (doall (for [filepath (get-all-files root)
                 :when (not (.isDirectory (io/file filepath)))
-                :let [mark (get commentDict (re-find #"(?<=\w)\..*$" filepath))]
+                :let [mark (get commentDict (re-find #"(?<=\w)\.\w+$" filepath))]
                 :when mark]
             (conj (read-comments-in-file filepath mark)
                   filepath))))
@@ -68,7 +68,7 @@
                   :when (not (.isDirectory (io/file filepath)))
                   typepattern typepatterns
                   :when (re-matches (first typepattern) filepath)
-                  :let [mark (get commentDict (re-find #"(?<=\w)\..*$" filepath))]
+                  :let [mark (get commentDict (re-find #"(?<=\w)\.\w+$" filepath))]
                   :when mark]
               (conj (read-comments-in-file filepath (get commentDict (last typepattern)))
                     filepath))))))
@@ -78,7 +78,11 @@
 (defn -main [& args]
   (let [commentDict (read-json)
         [root & filetypes] args]
+    ;(println commentDict)
     ;(println args)
+    ;(println root)
     ;(println filetypes)
-    (println (read-files commentDict root filetypes)))
+    (cond filetypes (println (read-files commentDict root filetypes))
+          root (println (read-files commentDict root))
+          :else (println (read-files commentDict))))
 )
