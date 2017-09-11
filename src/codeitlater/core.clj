@@ -6,7 +6,7 @@
 
 (defn read-json
   ([]
-   (json/read-str (slurp "/Users/cchen386/Desktop/codeitlater/src/codeitlater/comments.json")))
+   (json/read-str (slurp "./src/codeitlater/comments.json")))
   ([path]
    (json/read-str (slurp (str path "/comments.json")))))
 
