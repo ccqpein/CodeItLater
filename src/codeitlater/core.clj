@@ -50,15 +50,19 @@
    (doall (for [filepath (get-all-files)
                 :when (not (.isDirectory (io/file filepath)))
                 :let [mark (get commentDict (re-find #"(?<=\w)\.\w+$" filepath))]
-                :when mark]
-            (conj (read-comments-in-file filepath mark)
+                :when mark
+                :let [comment (read-comments-in-file filepath mark)]
+                :when (->> comment empty? not)]
+            (conj comment
                   filepath))))
   ([commentDict root]
    (doall (for [filepath (get-all-files root)
                 :when (not (.isDirectory (io/file filepath)))
                 :let [mark (get commentDict (re-find #"(?<=\w)\.\w+$" filepath))]
-                :when mark]
-            (conj (read-comments-in-file filepath mark)
+                :when mark
+                :let [comment (read-comments-in-file filepath mark)]
+                :when (->> comment empty? not)]
+            (conj comment
                   filepath))))
   ([commentDict root filetypes]
    (let [typepatterns (for [filetype filetypes
@@ -70,8 +74,10 @@
                   typepattern typepatterns
                   :when (re-matches (first typepattern) filepath)
                   :let [mark (get commentDict (re-find #"(?<=\w)\.\w+$" filepath))]
-                  :when mark]
-              (conj (read-comments-in-file filepath (get commentDict (last typepattern)))
+                  :when mark
+                  :let [comment (read-comments-in-file filepath (get commentDict (last typepattern)))]
+                  :when (->> comment empty? not)]
+              (conj comment
                     filepath))))))
 
 ;;:= TODO: make diferent behavior of deffirent args.
