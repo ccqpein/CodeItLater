@@ -2,6 +2,7 @@
   (:require [clojure.java.io :as io]
             [clojure.data.json :as json]
             [clojure.tools.cli :refer [parse-opts]]
+            [codeitlater.format :as cilformat]
             )
   (:gen-class))
 
@@ -89,7 +90,7 @@
     ;(println args)
     ;(println root)
     ;(println filetypes)
-    (cond filetypes (println (read-files commentDict root filetypes))
-          root (println (read-files commentDict root))
-          :else (println (read-files commentDict))))
+    (cond filetypes (cilformat/list2tree (read-files commentDict root filetypes))
+          root (cilformat/list2tree (read-files commentDict root))
+          :else (cilformat/list2tree (read-files commentDict))))
 )
