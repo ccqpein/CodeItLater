@@ -94,5 +94,4 @@
           root (cilformat/list2tree (read-files commentDict root))
           :else (cilformat/list2tree (read-files commentDict)))
     ;; https://stackoverflow.com/questions/36251800/what-is-clojures-flush-and-why-is-it-necessary
-    (flush))
-)
+    (flush)))

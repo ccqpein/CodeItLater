@@ -11,6 +11,5 @@
             (doseq [tuple tuples]
               (printf "  |-- %s\n" tuple))
             (recur (rest listset))
-            )
-          )))
+            ))))
 
