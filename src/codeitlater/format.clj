@@ -10,6 +10,7 @@
             (printf "|-- %s\n" filepath)
             (doseq [tuple tuples]
               (printf "  |-- %s\n" tuple))
+            (println)
             (recur (rest listset))
             ))))
 
