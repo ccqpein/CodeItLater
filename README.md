@@ -9,3 +9,4 @@ Make flags in source code where may have problems or can optimize. codeitlater h
 ## Todo
 
 Pick out `keywords` comment content
+Open file and jump to line immediatly
