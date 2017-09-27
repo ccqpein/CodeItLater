@@ -3,6 +3,7 @@
             [clojure.data.json :as json]
             [clojure.tools.cli :refer [parse-opts]]
             [codeitlater.format :as cilformat]
+            [codeitlater.parser-args :refer :all]
             )
   (:gen-class))
 
@@ -35,27 +36,14 @@
       )))
 
 
-(defn get-all-files
+(defn get-all-files [root]
   "return a lazy sequence including all files"
-  ([]
-   (map #(.getPath %) (file-seq (io/file "."))))
-  ([root]
-   (map #(.getPath %) (file-seq (io/file root))))
-  )
+  (map #(.getPath %) (file-seq (io/file root))))
 
 
 ;;(partial read-comments-inline commentMark)
 (defn read-files
   "Read all files depend on root path and file types, find comments inside and return."
-  ([commentDict]
-   (doall (for [filepath (get-all-files)
-                :when (not (.isDirectory (io/file filepath)))
-                :let [mark (get commentDict (re-find #"(?<=\w)\.\w+$" filepath))]
-                :when mark
-                :let [comment (read-comments-in-file filepath mark)]
-                :when (->> comment empty? not)]
-            (conj comment
-                  filepath))))
   ([commentDict root]
    (doall (for [filepath (get-all-files root)
                 :when (not (.isDirectory (io/file filepath)))
@@ -81,17 +69,20 @@
               (conj comment
                     filepath))))))
 
-;;:= TODO: make diferent behavior of deffirent args.
+;;:= TODO: make diferent behavior of diffirent args.
 ;;:= TODO: make tags options, for example, -json file.json
+;;:= DEBUG: parser-args only can handle one filetype so far
 (defn -main [& args]
   (let [commentDict (read-json)
-        [root & filetypes] args]
+        options (-> args (parse-opts command) (get :options))
+        root (:path options)
+        filetypes (list (:filetype options))]
     ;(println commentDict)
     ;(println args)
+    ;(println options)
     ;(println root)
-    ;(println filetypes)
+    (println filetypes)
     (cond filetypes (cilformat/list2tree (read-files commentDict root filetypes))
-          root (cilformat/list2tree (read-files commentDict root))
-          :else (cilformat/list2tree (read-files commentDict)))
+          root (cilformat/list2tree (read-files commentDict root)))
     ;; https://stackoverflow.com/questions/36251800/what-is-clojures-flush-and-why-is-it-necessary
     (flush)))
