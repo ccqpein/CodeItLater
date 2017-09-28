@@ -4,6 +4,7 @@
             [clojure.tools.cli :refer [parse-opts]]
             [codeitlater.format :as cilformat]
             [codeitlater.parser-args :refer :all]
+            [clojure.string :as str]
             )
   (:gen-class))
 
@@ -69,20 +70,19 @@
               (conj comment
                     filepath))))))
 
-;;:= TODO: make diferent behavior of diffirent args.
+
 ;;:= TODO: make tags options, for example, -json file.json
-;;:= DEBUG: parser-args only can handle one filetype so far
 (defn -main [& args]
   (let [commentDict (read-json)
         options (-> args (parse-opts command) (get :options))
-        root (:path options)
-        filetypes (list (:filetype options))]
+        dir (:dir options)
+        filetypes (:filetype options)]
     ;(println commentDict)
     ;(println args)
     ;(println options)
-    ;(println root)
-    (println filetypes)
-    (cond filetypes (cilformat/list2tree (read-files commentDict root filetypes))
-          root (cilformat/list2tree (read-files commentDict root)))
+    ;(println dir)
+    ;(println filetypes)
+    (cond filetypes (cilformat/list2tree (read-files commentDict dir (str/split filetypes #" ")))
+          dir (cilformat/list2tree (read-files commentDict dir)))
     ;; https://stackoverflow.com/questions/36251800/what-is-clojures-flush-and-why-is-it-necessary
     (flush)))

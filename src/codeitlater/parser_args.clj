@@ -4,7 +4,7 @@
 
 ;; https://github.com/clojure/tools.cli
 (def command
-  [["-p" "--path PATH" "Root path"
+  [["-d" "--dir DIR" "Root dir"
 ;    :id :path
     :default "."
     ]
