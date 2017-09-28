@@ -6,25 +6,13 @@
 
 (deftest parser-comments-test
   (testing "Test parser"
-    (is (= {:path "." :filetype nil}
-           (get (parse-opts '("-p" ".") codeitlater.parser-args/command) :options)))
-    (is (= {:path "." :filetype "clj"}
-           (get (parse-opts '("-p" "." "-f" "clj") codeitlater.parser-args/command) :options)))))
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    (is (= {:dir "." :filetype nil}
+           (get (parse-opts '("-d" ".") codeitlater.parser-args/command) :options)))
+    (is (= {:dir "." :filetype "clj"}
+           (get (parse-opts '("-d" "." "-f" "clj") codeitlater.parser-args/command) :options)))
+    (is (= {:dir "." :filetype "clj go"}
+           (get (parse-opts '("-f" "clj go") codeitlater.parser-args/command) :options)))
+    (is (= {:dir "." :filetype "clj go"}
+           (get (parse-opts '("-f" "clj go" "-d" ".") codeitlater.parser-args/command) :options)))
+    ))
 
