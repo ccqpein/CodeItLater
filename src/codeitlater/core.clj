@@ -41,13 +41,17 @@
   "return a lazy sequence including all files"
   (map #(.getPath %) (file-seq (io/file root))))
 
+(defn is-hidden-file? [filepath]
+  "check file is hidden file or not"
+  (if (re-find #"#.*$" filepath) true nil))
 
 ;;(partial read-comments-inline commentMark)
 (defn read-files
   "Read all files depend on root path and file types, find comments inside and return."
   ([commentDict root]
    (doall (for [filepath (get-all-files root)
-                :when (not (.isDirectory (io/file filepath)))
+                :when (not (or (.isDirectory (io/file filepath))
+                               (is-hidden-file? filepath)))
                 :let [mark (get commentDict (re-find #"(?<=\w)\.\w+$" filepath))]
                 :when mark
                 :let [comment (read-comments-in-file filepath mark)]
@@ -60,7 +64,8 @@
                         (list (re-pattern (str ".+" filetype "$"))
                               (str "." filetype)))]
      (doall (for [filepath (get-all-files root)
-                  :when (not (.isDirectory (io/file filepath)))
+                  :when (not (or (.isDirectory (io/file filepath))
+                                 (is-hidden-file? filepath)))
                   typepattern typepatterns
                   :when (re-matches (first typepattern) filepath)
                   :let [mark (get commentDict (re-find #"(?<=\w)\.\w+$" filepath))]
