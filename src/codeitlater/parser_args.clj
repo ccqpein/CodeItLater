@@ -5,11 +5,12 @@
 ;; https://github.com/clojure/tools.cli
 (def command
   [["-d" "--dir DIR" "Root dir"
-;    :id :path
     :default "."
     ]
    ["-f" "--filetype FILETYPE" "File types"
     :id :filetype
     :default nil
     ]
+   ["-j" "--json JSON" "Comment json file"
+    :default "https://raw.githubusercontent.com/ccqpein/codeitlater/master/src/codeitlater/comments.json"]
    ])

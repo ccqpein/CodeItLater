@@ -8,11 +8,8 @@
             )
   (:gen-class))
 
-(defn read-json
-  ([]
-   (json/read-str (slurp "https://raw.githubusercontent.com/ccqpein/codeitlater/master/src/codeitlater/comments.json")))
-  ([path]
-   (json/read-str (slurp (str path "/comments.json")))))
+(defn read-json [path]
+  (json/read-str (slurp path)))
 
 
 ;; This regex expression get help from: https://stackoverflow.com/questions/45848999/clojure-regex-delete-whitespace-in-pattern
@@ -76,17 +73,13 @@
                     filepath))))))
 
 
-;;:= TODO: make tags options, for example, -json file.json
 (defn -main [& args]
-  (let [commentDict (read-json)
-        options (-> args (parse-opts command) (get :options))
+  (let [options (-> args (parse-opts command) (get :options))
         dir (:dir options)
-        filetypes (:filetype options)]
-    ;(println commentDict)
-    ;(println args)
-    ;(println options)
-    ;(println dir)
-    ;(println filetypes)
+        filetypes (:filetype options)
+        jsonpath (:json options)
+        commentDict (read-json jsonpath)]
+    (println options jsonpath)
     (cond filetypes (cilformat/list2tree (read-files commentDict dir (str/split filetypes #" ")))
           dir (cilformat/list2tree (read-files commentDict dir)))
     ;; https://stackoverflow.com/questions/36251800/what-is-clojures-flush-and-why-is-it-necessary
