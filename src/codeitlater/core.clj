@@ -28,7 +28,7 @@
           pickcomment (partial read-comments-inline commentMark)]
       (for [thisline (doall (line-seq codefile))
             :let [comment (pickcomment thisline)
-                  lineNum (swap! count inc)] ;;:= atom?
+                  lineNum (swap! count inc)]
             :when comment]
         (list lineNum comment))
       )))
@@ -79,6 +79,8 @@
         filetypes (:filetype options)
         jsonpath (:json options)
         commentDict (read-json jsonpath)]
+    ;;:= TODO: make json expand feature
+    (println commentDict)
     (println options jsonpath)
     (cond filetypes (cilformat/list2tree (read-files commentDict dir (str/split filetypes #" ")))
           dir (cilformat/list2tree (read-files commentDict dir)))

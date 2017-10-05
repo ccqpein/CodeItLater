@@ -13,4 +13,6 @@
     ]
    ["-j" "--json JSON" "Comment json file"
     :default "https://raw.githubusercontent.com/ccqpein/codeitlater/master/src/codeitlater/comments.json"]
+   ["-jx" "--jsonx JSON" "Expand comment json file"
+    :default nil]
    ])
