@@ -8,8 +8,8 @@
             )
   (:gen-class))
 
-(defn read-json [path]
-  (json/read-str (slurp path)))
+(defn read-json [^String path]
+  (if path (json/read-str (slurp path)) nil))
 
 
 ;; This regex expression get help from: https://stackoverflow.com/questions/45848999/clojure-regex-delete-whitespace-in-pattern
@@ -78,10 +78,10 @@
         dir (:dir options)
         filetypes (:filetype options)
         jsonpath (:json options)
-        commentDict (read-json jsonpath)]
-    ;;:= TODO: make json expand feature
-    (println commentDict)
-    (println options jsonpath)
+        jsonpathx (:jsonx options)
+        commentDict (into (read-json jsonpath) (read-json jsonpathx))]
+    ;(println commentDict)
+    ;(println options jsonpath)
     (cond filetypes (cilformat/list2tree (read-files commentDict dir (str/split filetypes #" ")))
           dir (cilformat/list2tree (read-files commentDict dir)))
     ;; https://stackoverflow.com/questions/36251800/what-is-clojures-flush-and-why-is-it-necessary
