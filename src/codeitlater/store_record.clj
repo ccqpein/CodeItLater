@@ -1,3 +1,4 @@
+;;; this feature is not necessary, if need update manually everytime, why need this feature.
 (ns codeitlater.store-record
   )
 
@@ -7,5 +8,4 @@
 
 (defn read-from [path]
   "read lst back from local file")
-
 
