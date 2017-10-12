@@ -8,29 +8,30 @@
             )
   (:gen-class))
 
+
 (defn read-json [^String path]
   (if path (json/read-str (slurp path)) nil))
 
 
 ;; This regex expression get help from: https://stackoverflow.com/questions/45848999/clojure-regex-delete-whitespace-in-pattern
-(defn make-pattern [commentMark]
-  (re-pattern (str commentMark "+:=\\s*" "(.+)")))
+(defn make-pattern [commentmark]
+  (re-pattern (str commentmark "+:=\\s*" "(.+)")))
 
 
-(defn read-comments-inline [commentMark line]
-  (let [result (re-find (make-pattern commentMark) line)]
+(defn read-comments-inline [commentmark line]
+  (let [result (re-find (make-pattern commentmark) line)]
     (second result))) 
 
 
-(defn read-comments-in-file [filepath commentMark]
+(defn read-comments-in-file [filepath commentmark]
   (with-open [codefile (io/reader filepath)]
     (let [count (atom 0)
-          pickcomment (partial read-comments-inline commentMark)]
+          pickcomment (partial read-comments-inline commentmark)]
       (for [thisline (doall (line-seq codefile))
             :let [comment (pickcomment thisline)
-                  lineNum (swap! count inc)]
+                  linenum (swap! count inc)]
             :when comment]
-        (list lineNum comment))
+        (list linenum comment))
       )))
 
 
@@ -38,24 +39,26 @@
   "return a lazy sequence including all files"
   (map #(.getPath %) (file-seq (io/file root))))
 
+
 (defn is-hidden-file? [filepath]
   "check file is hidden file or not"
   (if (re-find #"#.*$" filepath) true nil))
 
-;;(partial read-comments-inline commentMark)
+
+;;(partial read-comments-inline commentmark)
 (defn read-files
   "Read all files depend on root path and file types, find comments inside and return."
-  ([commentDict root]
+  ([commentdict root]
    (doall (for [filepath (get-all-files root)
                 :when (not (or (.isDirectory (io/file filepath))
                                (is-hidden-file? filepath)))
-                :let [mark (get commentDict (re-find #"(?<=\w)\.\w+$" filepath))]
+                :let [mark (get commentdict (re-find #"(?<=\w)\.\w+$" filepath))]
                 :when mark
                 :let [comment (read-comments-in-file filepath mark)]
                 :when (->> comment empty? not)]
             (conj comment
                   filepath))))
-  ([commentDict root filetypes]
+  ([commentdict root filetypes]
    (let [typepatterns (for [filetype filetypes
                             :when (not= "" filetype)]
                         (list (re-pattern (str ".+" filetype "$"))
@@ -65,9 +68,9 @@
                                  (is-hidden-file? filepath)))
                   typepattern typepatterns
                   :when (re-matches (first typepattern) filepath)
-                  :let [mark (get commentDict (re-find #"(?<=\w)\.\w+$" filepath))]
+                  :let [mark (get commentdict (re-find #"(?<=\w)\.\w+$" filepath))]
                   :when mark
-                  :let [comment (read-comments-in-file filepath (get commentDict (last typepattern)))]
+                  :let [comment (read-comments-in-file filepath (get commentdict (last typepattern)))]
                   :when (->> comment empty? not)]
               (conj comment
                     filepath))))))
@@ -75,14 +78,14 @@
 
 (defn -main [& args]
   (let [options (-> args (parse-opts command) (get :options))
-        dir (:dir options)
-        filetypes (:filetype options)
-        jsonpath (:json options)
-        jsonpathx (:jsonx options)
-        commentDict (into (read-json jsonpath) (read-json jsonpathx))]
-    ;(println commentDict)
-    ;(println options jsonpath)
-    (cond filetypes (cilformat/list2tree (read-files commentDict dir (str/split filetypes #" ")))
-          dir (cilformat/list2tree (read-files commentDict dir)))
+        {dir :dir 
+         filetypes :filetype 
+         jsonpath :json 
+         jsonpathx :jsonx} options
+        commentdict (into (read-json jsonpath) (read-json jsonpathx))]
+    ;(println commentdict)
+    (println options)
+    (cond filetypes (cilformat/list2tree (read-files commentdict dir (str/split filetypes #" ")))
+          dir (cilformat/list2tree (read-files commentdict dir)))
     ;; https://stackoverflow.com/questions/36251800/what-is-clojures-flush-and-why-is-it-necessary
     (flush)))
