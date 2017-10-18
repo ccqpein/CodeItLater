@@ -9,10 +9,11 @@
     ]
    ["-f" "--filetype FILETYPE" "File types"
     :id :filetype
-    :default nil
     ]
    ["-j" "--json JSON" "Comment json file"
     :default "https://raw.githubusercontent.com/ccqpein/codeitlater/master/src/codeitlater/comments.json"]
    [nil "--jsonx JSON" "Expand comment json file"
-    :default nil]
+    ]
+   ["-k" "--keyword KEYWORD" "keyword"
+    ]
    ])
