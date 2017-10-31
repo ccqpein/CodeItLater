@@ -12,7 +12,6 @@
               (if keyword
                 (let [content (-> (str "(?<=" keyword ":" ").*$") (re-pattern) (re-find (second tuple)))]
                   (if content
-                    (printf "* |-- %s\n" tuple)
                     (printf "  |-- %s\n" tuple)))
                 (printf "  |-- %s\n" tuple)))
             (println)
