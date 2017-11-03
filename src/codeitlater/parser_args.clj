@@ -16,4 +16,6 @@
     ]
    ["-k" "--keyword KEYWORD" "keyword"
     ]
+   ["-h" "--help"
+    ]
    ])
