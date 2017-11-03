@@ -13,4 +13,4 @@ Make flags in source code where may have problems or can optimize. codeitlater h
 + Pick out `keywords` comment content
 + ~~Open file and jump to line immediately~~
 + Store result in local, save time in next searching, and only search and update newer/modified file. Can find change depending on moditify time
-+ Let JVM be daemon process.
++ ~~Let JVM be daemon process.~~
