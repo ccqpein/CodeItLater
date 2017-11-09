@@ -76,19 +76,23 @@
                     filepath))))))
 
 ;;:= TODO: lalala
-;;:= MARK: hahaha 
+;;:= MARK: hahaha
+;;:= TODO: finish help flag
 (defn -main [& args]
   (let [options (-> args (parse-opts command) (get :options))
         {dir :dir 
          filetypes :filetype 
          jsonpath :json 
          jsonpathx :jsonx
-         keyword :keyword} options
+         keyword :keyword
+         help :help} options
         commentdict (into (read-json jsonpath) (read-json jsonpathx))]
     ;(println commentdict)
     ;(println options)
-    (cond filetypes (cilformat/list2tree (read-files commentdict dir (str/split filetypes #" ")) keyword)
-          dir (cilformat/list2tree (read-files commentdict dir) keyword))
+    (cond
+      help (print (-> args (parse-opts command) (get :summary)))
+      filetypes (cilformat/list2tree (read-files commentdict dir (str/split filetypes #" ")) keyword)
+      dir (cilformat/list2tree (read-files commentdict dir) keyword))
     ;; https://stackoverflow.com/questions/36251800/what-is-clojures-flush-and-why-is-it-necessary
     (flush)))
 
