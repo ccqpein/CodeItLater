@@ -8,6 +8,7 @@
             )
   (:gen-class))
 
+(def *help-url* "https://raw.githubusercontent.com/ccqpein/codeitlater/master/doc/help")
 
 (defn read-json [^String path]
   (if path (json/read-str (slurp path)) nil))
@@ -90,7 +91,9 @@
     ;(println commentdict)
     ;(println options)
     (cond
-      help (print (-> args (parse-opts command) (get :summary)))
+      help (with-open [rdr (io/reader *help-url*)]
+             (doseq [line (line-seq rdr)]
+               (println line)))
       filetypes (cilformat/list2tree (read-files commentdict dir (str/split filetypes #" ")) keyword)
       dir (cilformat/list2tree (read-files commentdict dir) keyword))
     ;; https://stackoverflow.com/questions/36251800/what-is-clojures-flush-and-why-is-it-necessary

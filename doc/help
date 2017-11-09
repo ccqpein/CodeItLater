@@ -1,0 +1,12 @@
+"-d" "--dir DIR" "Root dir"
+
+"-f" "--filetype FILETYPE" "File types"
+
+"-j" "--json JSON" "Comment json file"
+
+     "--jsonx JSON" "Expand comment json file"
+
+"-k" "--keyword KEYWORD" "keyword"
+    
+"-h" "--help"
+    
