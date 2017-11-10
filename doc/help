@@ -1,12 +1,12 @@
-"-d" "--dir DIR" "Root dir"
+-d   --dir DIR             Root dir
 
-"-f" "--filetype FILETYPE" "File types"
+-f   --filetype FILETYPE   File types. Codeitlater will scan every file if no filetype support.
 
-"-j" "--json JSON" "Comment json file"
+-j   --json JSON           Comment json file
 
-     "--jsonx JSON" "Expand comment json file"
+     --jsonx JSON          Expand comment json file
 
-"-k" "--keyword KEYWORD" "keyword"
+-k   --keyword KEYWORD     keyword
     
-"-h" "--help"
+-h   --help                Show help
     
