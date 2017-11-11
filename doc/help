@@ -4,9 +4,11 @@
 
 -j   --json JSON           Comment json file
 
-     --jsonx JSON          Expand comment json file
+     --jsonx JSON          Expand comment json file. 
 
--k   --keyword KEYWORD     keyword
-    
+-k   --keyword KEYWORD     Filter keyword in comment, must be upper case and at beginning of comment.
+                           Example:
+			   //:= TODO: test todo list
+			       
 -h   --help                Show help
     
