@@ -1,3 +1,5 @@
+Comments list in https://raw.githubusercontent.com/ccqpein/codeitlater/master/src/codeitlater/comments.json
+
 -d   --dir DIR             Root dir
 
 -f   --filetype FILETYPE   File types. Codeitlater will scan every file if no filetype support.
