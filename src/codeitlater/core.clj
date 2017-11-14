@@ -76,9 +76,7 @@
               (conj comment
                     filepath))))))
 
-;;:= TODO: lalala
-;;:= MARK: hahaha
-;;:= TODO: finish help flag
+
 (defn -main [& args]
   (let [options (-> args (parse-opts command) (get :options))
         {dir :dir 
