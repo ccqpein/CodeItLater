@@ -30,13 +30,18 @@ Run `jar` file
 
 You will get:
 ```
-
+|-- /user/src/main.go
+  |-- (3 "this line can be read by codeitlater")
+  |-- (4 "MARK: you can left kayword to marked comment line")
 ```
 
-Filter keyword:
+Filter keyword (use -k be keyword flag, check out more flags by -h):
 `java -jar /path/to/codeitlater.jar /user/src/ -k MARK`
 
 You will get:
 ```
-
+|-- /user/src/main.go
+  |-- (4 "MARK: you can left kayword to marked comment line")
 ```
+
+
