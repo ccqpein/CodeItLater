@@ -26,7 +26,7 @@ Golang:
 ```
 
 Run `jar` file
-`java -jar /path/to/codeitlater.jar /user/src/`
+`java -jar /path/to/codeitlater.jar -d /user/src/`
 
 You will get:
 ```
@@ -44,4 +44,6 @@ You will get:
   |-- (4 "MARK: you can left kayword to marked comment line")
 ```
 
+## TODO
 
++ Add to homebrew package manager
