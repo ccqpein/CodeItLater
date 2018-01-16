@@ -8,7 +8,7 @@
             )
   (:gen-class))
 
-(def *help-url* "https://raw.githubusercontent.com/ccqpein/codeitlater/master/doc/help")
+(def ^:dynamic *help-url* "https://raw.githubusercontent.com/ccqpein/codeitlater/master/doc/help")
 
 (defn read-json [^String path]
   (if path (json/read-str (slurp path)) nil))
