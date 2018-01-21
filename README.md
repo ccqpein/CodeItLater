@@ -28,6 +28,9 @@ Golang:
 Run `jar` file
 `java -jar /path/to/codeitlater.jar -d /user/src/`
 
+Or you have ran install method:
+`codeitlater -d /user/src/`
+
 You will get:
 ```
 |-- /user/src/main.go
@@ -42,6 +45,23 @@ You will get:
 ```
 |-- /user/src/main.go
   |-- (4 "MARK: you can left keyword to marked comment line")
+```
+
+Python:
+```python
+# /src/main.py
+# this line wont be read
+#:= this line for codeitlater
+print("aaa") ###:= this line can be read again
+```
+
+Run `codeitlater`
+
+You will get:
+```
+|-- /src/main.py
+  |-- (3 "this line for codeitlater")
+  |-- (4 "this line can be read again")
 ```
 
 ## How to install
@@ -61,4 +81,4 @@ download whole repository and install:
 uninstall:
 
 1. `rm /usr/local/bin/codeitlater /usr/local/bin/codeitlater.jar`
-2. delete all files (this repository, `~/.m2` is where dependencies download)
+2. delete all files (this repository && `~/.m2` is where dependencies download, if you want to delete too)
