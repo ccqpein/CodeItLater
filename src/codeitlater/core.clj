@@ -10,12 +10,14 @@
 
 (def ^:dynamic *help-url* "https://raw.githubusercontent.com/ccqpein/codeitlater/master/doc/help")
 
+
 (defn read-json [^String path]
   (if path (json/read-str (slurp path)) nil))
 
 
 ;; This regex expression get help from: https://stackoverflow.com/questions/45848999/clojure-regex-delete-whitespace-in-pattern
 (defn make-pattern [commentmark]
+  "make regex pattern by different languages' comment start symbol"
   (re-pattern (str commentmark "+:=\\s*" "(.+)")))
 
 
@@ -27,7 +29,7 @@
 (defn read-comments-in-file [filepath commentmark]
   (with-open [codefile (io/reader filepath)]
     (let [count (atom 0)
-          pickcomment (partial read-comments-inline commentmark)]
+          pickcomment (partial read-comments-inline commentmark)] ; partial functino here
       (for [thisline (doall (line-seq codefile))
             :let [comment (pickcomment thisline)
                   linenum (swap! count inc)]
@@ -92,8 +94,11 @@
       help (with-open [rdr (io/reader *help-url*)]
              (doseq [line (line-seq rdr)]
                (println line)))
-      filetypes (cilformat/list2tree (read-files commentdict dir (str/split filetypes #" ")) keyword)
-      dir (cilformat/list2tree (read-files commentdict dir) keyword))
+      ;; when have file type(s)
+      filetypes (cilformat/list2tree
+                 (read-files commentdict dir (str/split filetypes #" ")) keyword)
+      dir (cilformat/list2tree
+           (read-files commentdict dir) keyword))
     ;; https://stackoverflow.com/questions/36251800/what-is-clojures-flush-and-why-is-it-necessary
     (flush)))
 
