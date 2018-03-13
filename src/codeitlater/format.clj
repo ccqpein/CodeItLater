@@ -16,6 +16,8 @@
 
 (defn list2tree [ls keyword]
   "make list to tree"
+  ;:= print for test
+  ;(println ls)
   (loop [listset ls]
     (if (not (empty? listset))
           (let [thisls (first listset)

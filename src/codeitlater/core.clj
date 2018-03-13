@@ -8,6 +8,7 @@
             )
   (:gen-class))
 
+
 (def ^:dynamic *help-url* "https://raw.githubusercontent.com/ccqpein/codeitlater/master/doc/help")
 
 
@@ -27,15 +28,16 @@
 
 
 (defn read-comments-in-file [filepath commentmark]
-  (with-open [codefile (io/reader filepath)]
-    (let [count (atom 0)
-          pickcomment (partial read-comments-inline commentmark)] ; partial functino here
-      (for [thisline (doall (line-seq codefile))
-            :let [comment (pickcomment thisline)
-                  linenum (swap! count inc)]
-            :when comment]
-        (list linenum comment))
-      )))
+  (if (nil? commentmark) '()
+    (with-open [codefile (io/reader filepath)]
+      (let [count (atom 0)
+            pickcomment (partial read-comments-inline commentmark)] ; partial functino here
+        (for [thisline (doall (line-seq codefile))
+              :let [comment (pickcomment thisline)
+                    linenum (swap! count inc)]
+              :when comment]
+          (list linenum comment))))
+    ))
 
 
 (defn get-all-files [root]
@@ -48,35 +50,41 @@
   (if (re-find #"#.*$" filepath) true nil))
 
 
-;;(partial read-comments-inline commentmark)
 (defn read-files
   "Read all files depend on root path and file types, find comments inside and return."
   ([commentdict root]
-   (doall (for [filepath (get-all-files root)
-                :when (not (or (.isDirectory (io/file filepath))
-                               (is-hidden-file? filepath)))
-                :let [mark (get commentdict (re-find #"(?<=\w)\.\w+$" filepath))]
-                :when mark
-                :let [comment (read-comments-in-file filepath mark)]
-                :when (->> comment empty? not)]
-            (conj comment
-                  filepath))))
+   (reduce conj '()
+           (filter #(> (count %) 1)
+                   (map #(conj
+                          (->> %
+                               (re-find #"(?<=\w)\.\w+$")
+                               (get commentdict)
+                               (read-comments-in-file %))
+                          %)
+                        (filter #(not (or (.isDirectory (io/file %))
+                                          (is-hidden-file? %)))
+                                (get-all-files root))))))
   ([commentdict root filetypes]
-   (let [typepatterns (for [filetype filetypes
-                            :when (not= "" filetype)]
-                        (list (re-pattern (str ".+" filetype "$"))
-                              (str "." filetype)))]
-     (doall (for [filepath (get-all-files root)
-                  :when (not (or (.isDirectory (io/file filepath))
-                                 (is-hidden-file? filepath)))
-                  typepattern typepatterns
-                  :when (re-matches (first typepattern) filepath)
-                  :let [mark (get commentdict (re-find #"(?<=\w)\.\w+$" filepath))]
-                  :when mark
-                  :let [comment (read-comments-in-file filepath (get commentdict (last typepattern)))]
-                  :when (->> comment empty? not)]
-              (conj comment
-                    filepath))))))
+   (let [typepatterns
+         (for [filetype filetypes
+               :when (not= "" filetype)]
+           (list (re-pattern (str ".+" filetype "$"))
+                 (str "." filetype)))]
+     (reduce concat
+             (for [typepattern typepatterns]
+               (filter #(> (count %) 1)
+                       (map #(conj
+                              (->> %
+                                   (re-find #"(?<=\w)\.\w+$")
+                                   (get commentdict)
+                                   (read-comments-in-file %))
+                              %)
+                            (filter #(and
+                                      (not (or (.isDirectory (io/file %))
+                                               (is-hidden-file? %)))
+                                      (re-matches (first typepattern) %))
+                                    (get-all-files root)))))))
+   ))
 
 
 (defn -main [& args]
@@ -94,11 +102,14 @@
       help (with-open [rdr (io/reader *help-url*)]
              (doseq [line (line-seq rdr)]
                (println line)))
-      ;; when have file type(s)
+      ; when have file type(s)
       filetypes (cilformat/list2tree
-                 (read-files commentdict dir (str/split filetypes #" ")) keyword)
+                 (read-files commentdict dir (str/split filetypes #" "))
+                 keyword)
+      ; when want to scan different dir
       dir (cilformat/list2tree
-           (read-files commentdict dir) keyword))
+           (read-files commentdict dir)
+           keyword))
     ;; https://stackoverflow.com/questions/36251800/what-is-clojures-flush-and-why-is-it-necessary
     (flush)))
 
