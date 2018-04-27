@@ -38,7 +38,9 @@ You will get:
   |-- (4 "MARK: you can left keyword to marked comment line")
 ```
 
-Filter keyword (use -k be keyword flag, check out more flags by -h):
+**Filter keyword **
+
+use -k be keyword flag, check out more flags by -h
 `java -jar /path/to/codeitlater.jar /user/src/ -k MARK`
 
 You will get:
@@ -63,6 +65,20 @@ You will get:
   |-- (3 "this line for codeitlater")
   |-- (4 "this line can be read again")
 ```
+
+**Give specify file type**
+
+```
+codeitlater -f clj
+```
+
+You will get result only from clojure.
+
+```
+codeitlater -f "clj py"
+```
+
+Then results both of clojure and python will return.
 
 ## How to install
 
