@@ -12,7 +12,7 @@ Comments list in https://raw.githubusercontent.com/ccqpein/codeitlater/master/sr
                            Example:
 			   //:= TODO: test todo list
 
-			   java -jar codeitlater.jar -k TODO
+			   codeitlater -k TODO
 			   > TODO: test todo list
 			      
 -h   --help                Show help
