@@ -19,4 +19,5 @@
     ]
    ["-h" "--help"
     ]
+   ["-o" "--org ORGPATH" "create org file"]
    ])
