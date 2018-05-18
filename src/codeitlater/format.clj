@@ -4,7 +4,8 @@
 (defn printline [filepath tuples]
   (do
     (printf "|-- %s\n" filepath)
-    (doall (map #(printf "  |-- %s\n" %) tuples))))
+    (doall (map #(printf "  |-- %s\n" %) tuples))
+    (println)))
 
 (defn print-with-keyword [filepath tuples keyword]
   (let [filter-content (filter
@@ -25,7 +26,8 @@
             ;;:= TODO: make function to fix empty keyword issue
             (if keyword
               (print-with-keyword filepath tuples keyword)
-              (printline filepath tuples))
-            (println)
+              (printline filepath tuples)
+              )
+            ;(println)
             (recur (rest listset))
             ))))
