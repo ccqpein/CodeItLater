@@ -112,4 +112,3 @@
            keyword))
     ;; https://stackoverflow.com/questions/36251800/what-is-clojures-flush-and-why-is-it-necessary
     (flush)))
-
