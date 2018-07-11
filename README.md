@@ -23,6 +23,8 @@ Golang:
 // test codeitlater
 //:= this line can be read by codeitlater
 //:= MARK: you can left keyword to marked comment line
+/* mutil lines comments
+*/
 
 ```
 
@@ -34,6 +36,7 @@ You will get:
 |-- /user/src/main.go
   |-- (3 "this line can be read by codeitlater")
   |-- (4 "MARK: you can left keyword to marked comment line")
+  |-- (5 "mutil lines comments")
 ```
 
 Python:
@@ -91,7 +94,7 @@ You will get:
 
 I wound like use home-brew to install this, unfortunately, I dont know ruby
 
-require:
+**require**:
 
 + [Leiningen](https://leiningen.org)
 + JDK/JRE for leiningen
@@ -102,14 +105,14 @@ download whole repository to whereever you want && install under folder path:
 2. `ln -sfv $(PWD)/target/*standalone.jar /usr/local/bin/codeitlater.jar`
 3. `ln -sfv $(PWD)/run.sh /usr/local/bin/codeitlater`
 
-uninstall:
+**uninstall**:
 
 1. `rm /usr/local/bin/codeitlater /usr/local/bin/codeitlater.jar`
 2. delete all files (this repository && `~/.m2` is where dependencies download, if you want to delete too)
 
-update:
+**update**:
 
-I do not write update method so far, just reinstall all stuff.
+I do not write update method so far, just reinstall all stuff. `git pull` and `lein uberjar` again.
 
 ## Expand other languages ##
 
