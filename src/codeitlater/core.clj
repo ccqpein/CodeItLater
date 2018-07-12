@@ -22,22 +22,36 @@
   (re-pattern (str commentmark "+:=\\s*" "(.+)")))
 
 
-(defn read-comments-inline [commentmark line]
-  (let [result (re-find (make-pattern commentmark) line)]
+(defn read-comments-inline [commentpattern line]
+  (let [result (re-find commentpattern line)]
     (second result))) 
 
 
 (defn read-comments-in-file [filepath commentmark]
-  (if (nil? commentmark) '()
-    (with-open [codefile (io/reader filepath)]
-      (let [count (atom 0)
-            pickcomment (partial read-comments-inline commentmark)] ; partial functino here
-        (for [thisline (doall (line-seq codefile))
-              :let [comment (pickcomment thisline)
-                    linenum (swap! count inc)]
-              :when comment]
-          (list linenum comment))))
-    ))
+  (cond (nil? commentmark) '()
+        (string? commentmark)
+        (with-open [codefile (io/reader filepath)]
+          (let [count (atom 0)
+                comment_pattern (make-pattern commentmark)
+                pickcomment (partial read-comments-inline comment_pattern)] ;partial functino here
+            (for [thisline (doall (line-seq codefile))
+                  :let [comment (pickcomment thisline)
+                        linenum (swap! count inc)]
+                  :when comment]
+              (list linenum comment))))
+
+        :else ;when commentmark is a list
+        (with-open [codefile (io/reader filepath)]
+          (let [count (atom 0)
+                comment_pattern (map make-pattern commentmark)
+                ;make several comments read function
+                pick_comment_funcs (map #(partial read-comments-inline %) comment_pattern)]
+            (for [thisline (doall (line-seq codefile))
+                  :let [comment (first (filter some? (map #(% thisline) pick_comment_funcs)))
+                        linenum (swap! count inc)]
+                  :when comment]
+              (list linenum comment))))
+        ))
 
 
 (defn get-all-files [root]
@@ -57,7 +71,7 @@
            (filter #(> (count %) 1)
                    (map #(conj
                           (->> %
-                               (re-find #"(?<=\w)\.\w+$")
+                               (re-find #"(?<=\w)\.\w+$") ; get filetype
                                (get commentdict)
                                (read-comments-in-file %))
                           %)
