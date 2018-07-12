@@ -11,7 +11,8 @@
     :id :filetype
     ]
    ["-j" "--json JSON" "Comment json file"
-    :default "https://raw.githubusercontent.com/ccqpein/codeitlater/master/src/codeitlater/comments.json"]
+    :default "https://raw.githubusercontent.com/ccqpein/codeitlater/master/src/codeitlater/comments.json"
+    ]
    [nil "--jsonx JSON" "Expand comment json file"
     ]
    ["-k" "--keyword KEYWORD" "keyword"
