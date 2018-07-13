@@ -116,9 +116,9 @@ I do not write update method so far, just reinstall all stuff. `git pull` and `l
 
 ## Expand other languages ##
 
-Codeitlater support languages those only I code, Clojure, Python, Golang, Rust, and so on. If you would like code other languages. Make your own json file like [this](https://raw.githubusercontent.com/ccqpein/codeitlater/master/src/codeitlater/comments.json). Then use `-j` to input your own json dict. 
+Codeitlater support languages those only I code, Clojure, Python, Golang, Rust, and so on. If you would like code other languages. Make your own json file like [this](https://raw.githubusercontent.com/ccqpein/codeitlater/master/src/codeitlater/comments.json). Then use `-j` to input your own json dict and your file will cover mine. 
 
-`--jsonx` used to add/expand new dict to current one. It does not change current dict, just add new.
+`--jsonx` used to add/expand new dict to current one. It does not change current dict, just add new. If jsonx file has filetype which json already has, jsonx file will **cover** old json file.
 
 `-j` and `--jsonx` can work together.
 
