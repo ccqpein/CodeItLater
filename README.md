@@ -16,7 +16,7 @@ Write code as usual. The comment line that you want to leave mark in, left `:=` 
 
 For example:
 
-Golang:
+**Golang**:
 
 ```golang
 // /user/src/main.go
@@ -39,7 +39,7 @@ You will get:
   |-- (5 "mutil lines comments")
 ```
 
-Python:
+**Python**:
 
 ```python
 # /src/main.py
