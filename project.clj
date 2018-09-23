@@ -5,5 +5,5 @@
             :url "https://github.com/ccqpein/codeitlater/blob/master/LICENSE"}
   :dependencies [[org.clojure/clojure "1.9.0"]
                  [org.clojure/data.json "0.2.6"]
-                 [org.clojure/tools.cli "0.3.5"]]
+                 [org.clojure/tools.cli "0.4.0"]]
   :main codeitlater.core)

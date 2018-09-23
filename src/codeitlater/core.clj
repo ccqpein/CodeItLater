@@ -108,21 +108,25 @@
          jsonpath :json 
          jsonpathx :jsonx
          keyword :keyword
-         help :help} options
+         help :help
+         orgpath :org} options
         commentdict (into (read-json jsonpath) (read-json jsonpathx))]
-    ;(println commentdict)
-    ;(println options)
+    ;;(println commentdict)
+    ;;(println options)
     (cond
       help (with-open [rdr (io/reader *help-url*)]
              (doseq [line (line-seq rdr)]
                (println line)))
-      ; when have file type(s)
+      ;;when have file type(s)
       filetypes (cilformat/list2tree
                  (read-files commentdict dir (str/split filetypes #" "))
                  keyword)
-      ; when want to scan different dir
+      ;;when want to scan different dir
       dir (cilformat/list2tree
            (read-files commentdict dir)
-           keyword))
+           keyword)
+      ;;if create org file
+      
+      )
     ;; https://stackoverflow.com/questions/36251800/what-is-clojures-flush-and-why-is-it-necessary
     (flush)))
