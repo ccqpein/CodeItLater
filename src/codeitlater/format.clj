@@ -23,7 +23,6 @@
     (if (not (empty? listset))
           (let [thisls (first listset)
                 [filepath & tuples] thisls]
-            ;;:= TODO: make function to fix empty keyword issue
             (if keyword
               (print-with-keyword filepath tuples keyword)
               (printline filepath tuples)
