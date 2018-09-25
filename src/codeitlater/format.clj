@@ -2,6 +2,7 @@
   )
 
 (defn printline [filepath tuples]
+  "tuple => ((linenum string)...)"
   (do
     (printf "|-- %s\n" filepath)
     (doall (map #(printf "  |-- %s\n" %) tuples))
@@ -18,7 +19,7 @@
 (defn list2tree [ls keyword]
   "make list to tree"
   ;:= print for test
-  ;(println ls)
+  ;;(println ls)
   (loop [listset ls]
     (if (not (empty? listset))
           (let [thisls (first listset)
@@ -30,3 +31,14 @@
             ;(println)
             (recur (rest listset))
             ))))
+
+;;;:= TODO: need to clean ':' after keyword
+(defn write-keyword-sentence [level content]
+  "write keyword content in level"
+  (let [this_level_mark (reduce str (take (inc level)
+                               (repeat "*")))]
+    ;;(print this_level_mark)
+    (doall (map #(str this_level_mark
+                      " "
+                      (second %))
+                content))))

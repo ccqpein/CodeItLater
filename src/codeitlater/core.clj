@@ -63,9 +63,12 @@
   "check file is hidden file or not"
   (if (re-find #"#.*$" filepath) true nil))
 
-
+;;;:= TODO: doc
 (defn read-files
-  "Read all files depend on root path and file types, find comments inside and return."
+  "Read all files depend on root path and file types, find comments inside and return.
+  return value should be:
+  ((filepath (lineNum content)...)...)
+  "
   ([commentdict root]
    (reduce conj '()
            (filter #(> (count %) 1)
@@ -126,6 +129,7 @@
            (read-files commentdict dir)
            keyword)
       ;;if create org file
+      orgpath ()
       )
     ;; https://stackoverflow.com/questions/36251800/what-is-clojures-flush-and-why-is-it-necessary
     (flush)))
