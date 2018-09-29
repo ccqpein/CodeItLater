@@ -52,21 +52,20 @@ return ((linenum \"keyword content\")..)
         ))))
 
 
+(defn format-content [line]
+  "line struct is '(1 [keyword content])"
+  (format "%s (in line %d)" (second (second line)) (first line))
+  )
+
 (defn write-keyword-sentence [ls keyword path]
   "write keyword content in level"
  (with-open [wrtr (io/writer path)]
   (loop [listset ls]
     (if (not (empty? listset))
       (let [thisls (first listset)
-            [filepath & tuples] thisls]
+            [filepath & tuples] thisls] ;destructing
+        ;;write filepath first
         (.write wrtr (str "* " filepath "\n"))
         (doseq [line (check-keyword-content tuples keyword)]
           (.write wrtr (str "** " keyword " " (format-content line))))
         (recur (rest listset)))))))
-
-
-(defn format-content [line]
-  "line struct is '(1 [keyword content])"
-  (format "%s (in line %d)" (second (second line)) (first line))
-  )
-
