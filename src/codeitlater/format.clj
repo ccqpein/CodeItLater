@@ -66,6 +66,6 @@ return ((linenum \"keyword content\")..)
             [filepath & tuples] thisls] ;destructing
         ;;write filepath first
         (.write wrtr (str "* " filepath "\n"))
-        (doseq [line (check-keyword-content tuples keyword)]
-          (.write wrtr (str "** " keyword " " (format-content line))))
+        (doall (doseq [line (check-keyword-content tuples keyword)]
+           (.write wrtr (str "** " keyword " " (format-content line)))))
         (recur (rest listset)))))))
