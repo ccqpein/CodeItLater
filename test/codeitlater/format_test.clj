@@ -10,5 +10,3 @@
            (check-keyword-content '((1 "TODO: aaa") (2 "aaaa")) "TODO")))
     (is (= '((1 ["TODO" "aaa"]) (3 ["TODO" "bbb"]))
            (check-keyword-content '((1 "TODO: aaa") (2 "aaaa") (3 "TODO: bbb")) "TODO")))))
-
-(deftest )

@@ -106,30 +106,32 @@
 
 (defn -main [& args]
   (let [options (-> args (parse-opts command) (get :options))
-        {dir :dir 
+        {dir       :dir 
          filetypes :filetype 
-         jsonpath :json 
+         jsonpath  :json 
          jsonpathx :jsonx
-         keyword :keyword
-         help :help
-         orgpath :org} options
-        commentdict (into (read-json jsonpath) (read-json jsonpathx))]
+         keyword   :keyword
+         help      :help
+         orgpath   :org} options
+        commentdict (into (read-json jsonpath) (read-json jsonpathx))
+
+        content (if filetypes
+                  ;;when have file type(s)
+                  (read-files commentdict dir (str/split filetypes #" "))
+                  ;;when want to scan different dir
+                  (read-files commentdict dir)
+                  )]
     ;;(println commentdict)
     ;;(println options)
     (cond
       help (with-open [rdr (io/reader *help-url*)]
              (doseq [line (line-seq rdr)]
                (println line)))
-      ;;when have file type(s)
-      filetypes (cilformat/list2tree
-                 (read-files commentdict dir (str/split filetypes #" "))
-                 keyword)
-      ;;when want to scan different dir
-      dir (cilformat/list2tree
-           (read-files commentdict dir)
-           keyword)
-      ;;if create org file
-      orgpath ()
+      orgpath (do (cilformat/list2tree content keyword)
+                  (cilformat/write-keyword-sentence content keyword orgpath))
+      
+      :else
+      (cilformat/list2tree content keyword)
       )
     ;; https://stackoverflow.com/questions/36251800/what-is-clojures-flush-and-why-is-it-necessary
     (flush)))
