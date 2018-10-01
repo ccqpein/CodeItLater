@@ -19,5 +19,6 @@
     ]
    ["-h" "--help"
     ]
-   ["-o" "--org ORGPATH" "create org file"]
+   ["-o" "--org ORGPATH" "create org file"
+    :default "./project.org"]
    ])

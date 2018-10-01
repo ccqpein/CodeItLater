@@ -57,15 +57,22 @@ return ((linenum \"keyword content\")..)
   (format "%s (in line %d)" (second (second line)) (first line))
   )
 
+
 (defn write-keyword-sentence [ls keyword path]
   "write keyword content in level"
- (with-open [wrtr (io/writer path)]
-  (loop [listset ls]
-    (if (not (empty? listset))
-      (let [thisls (first listset)
-            [filepath & tuples] thisls] ;destructing
-        ;;write filepath first
-        (.write wrtr (str "* " filepath "\n"))
-        (doall (doseq [line (check-keyword-content tuples keyword)]
-           (.write wrtr (str "** " keyword " " (format-content line)))))
-        (recur (rest listset)))))))
+  (let [realpath (if (.isDirectory (io/file path))
+                   (do (printf "%s is directory cannot write org file, write in ./project.org"
+                               path)
+                       "./project.org")
+                   path)]
+    (with-open [wrtr (io/writer realpath)]
+      (loop [listset ls]
+        (if (not (empty? listset))
+          (let [thisls (first listset)
+                [filepath & tuples] thisls] ;destructing
+            ;;write filepath first
+            (.write wrtr (str "* " filepath "\n"))
+            (doall (doseq [line (check-keyword-content tuples keyword)]
+                     (.write wrtr (str "** " keyword " " (format-content line)))))
+            (recur (rest listset)))))
+      )))
