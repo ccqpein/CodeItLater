@@ -116,7 +116,7 @@
         commentdict (into (read-json jsonpath) (read-json jsonpathx))
 
         content (if filetypes
-                  ;;when have file type(s)
+                  ;;:= TODO: when have file type(s)
                   (read-files commentdict dir (str/split filetypes #" "))
                   ;;when want to scan different dir
                   (read-files commentdict dir)
