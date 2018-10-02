@@ -54,7 +54,7 @@ return ((linenum \"keyword content\")..)
 
 (defn format-content [line]
   "line struct is '(1 [keyword content])"
-  (format "%s (in line %d)" (second (second line)) (first line))
+  (format "%s (in line %d)\n" (second (second line)) (first line))
   )
 
 
@@ -69,10 +69,22 @@ return ((linenum \"keyword content\")..)
       (loop [listset ls]
         (if (not (empty? listset))
           (let [thisls (first listset)
-                [filepath & tuples] thisls] ;destructing
-            ;;write filepath first
-            (.write wrtr (str "* " filepath "\n"))
-            (doall (doseq [line (check-keyword-content tuples keyword)]
-                     (.write wrtr (str "** " keyword " " (format-content line)))))
+                [filepath & tuples] thisls ;destructing
+                lines (check-keyword-content tuples keyword)] ;cache results first
+            (if keyword
+              ;;if keyword exsit and not empty lines
+              (if (not (empty? lines))
+                (do (.write wrtr (str "* " filepath "\n\n"))
+                    (doall (doseq [line (check-keyword-content tuples keyword)]
+                             (.write wrtr (str "** " keyword " " (format-content line)) "\n")))
+                    (.write wrtr "\n")))
+              ;;if not keyword input, write all
+              (do (.write wrtr (str "* " filepath "\n\n"))
+                  (doseq [line tuples]
+                    (.write wrtr
+                            (str "** "
+                                 (format "%s (in line %d)\n" (second line) (first line))
+                                 "\n")))
+                  (.write wrtr "\n")))
             (recur (rest listset)))))
       )))
