@@ -54,16 +54,16 @@ return ((linenum \"keyword content\")..)
 
 (defn format-content [line]
   "line struct is '(1 [keyword content])"
-  (format "%s (in line %d)\n" (second (second line)) (first line))
+  (str (format "%s (in line %d)\n" (second (second line)) (first line)))
   )
 
 
 (defn write-keyword-sentence [ls keyword path]
   "write keyword content in level"
   (let [realpath (if (.isDirectory (io/file path))
-                   (do (printf "%s is directory cannot write org file, write in ./project.org"
+                   (do (printf "%s is a directory, write in $PATH/project.org"
                                path)
-                       "./project.org")
+                       (str path "/project.org"))
                    path)]
     (with-open [wrtr (io/writer realpath)]
       (loop [listset ls]
@@ -75,8 +75,8 @@ return ((linenum \"keyword content\")..)
               ;;if keyword exsit and not empty lines
               (if (not (empty? lines))
                 (do (.write wrtr (str "* " filepath "\n\n"))
-                    (doall (doseq [line (check-keyword-content tuples keyword)]
-                             (.write wrtr (str "** " keyword " " (format-content line)) "\n")))
+                    (doseq [line lines]
+                      (.write wrtr (str "** " keyword " " (format-content line) "\n")))
                     (.write wrtr "\n")))
               ;;if not keyword input, write all
               (do (.write wrtr (str "* " filepath "\n\n"))
