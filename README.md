@@ -90,6 +90,25 @@ You will get:
   |-- (4 "MARK: you can left keyword to marked comment line")
 ```
 
+#### Output to Org file ####
+
+Give `-o` to let codeitlater write result to org-file. 
+
+Give file path after `-o` specific file path for org-file. If path is not file path, org-file will write in given path  with filename `project.org`.
+
+Filter special keyword to org-file (only support one keyword so far), put kinds of `-k TODO` **before** `-o` will filter all `TODO` to org-file. Otherwise, codeitlater will write all content in org-file.
+
+Format looks like:
+
+```org
+* file path
+** content (line {line number})
+
+# with keyword filter
+* file path
+** TODO content (line {line number}) 
+```
+ 
 ## How to install
 
 I wound like use home-brew to install this, unfortunately, I dont know ruby
