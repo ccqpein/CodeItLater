@@ -3,6 +3,7 @@
   (:require [clojure.java.io :as io])
   )
 
+
 (defn printline [filepath tuples]
   "tuple => ((linenum string)...)"
   (do
@@ -11,8 +12,23 @@
     (println)))
 
 
+(defn split-keywords [keywords]
+  ;;:= TODO: test
+  ;;:= MARK: test
+  "if input several keywords, should cut it to \"[keyword1|keyword2]\".
+Or, just return \"keyword\""
+  (if (nil? keywords)
+    nil
+    (let [tempResult (str/split keywords #" ")]
+      (if (> (count tempResult) 1)
+        (clojure.pprint/cl-format nil "[~{~a~^|~}]" tempResult)
+        (first tempResult)))))
+
+
+;;;most part of this function looks duplicated with check-keyword-content
+;;;:= TODO: re-write it
 (defn print-with-keyword [filepath tuples keyword]
-  (let [filter-content (filter #(-> (str "(?<=" keyword ":" ").*$")
+  (let [filter-content (filter #(-> (str "(?<=" (split-keywords keyword) ":" ").*$")
                                     (re-pattern)
                                     (re-find (second %)))
                                tuples)]
@@ -25,7 +41,7 @@
   "cut content those including keyword:
 return ((linenum \"keyword content\")..)
 "
-  (let [filter-content (filter #(-> (str "(?<=" keyword ":" ").*$")
+  (let [filter-content (filter #(-> (str "(?<=" (split-keywords keyword) ":" ").*$")
                                     (re-pattern)
                                     (re-find (second %)))
                                tuples)]
@@ -54,14 +70,15 @@ return ((linenum \"keyword content\")..)
 
 (defn format-content [line]
   "line struct is '(1 [keyword content])"
-  (str (format "%s (in line %d)\n" (second (second line)) (first line)))
+  (clojure.pprint/cl-format nil "~{~a ~}(in line ~a)\n" (second line) (first line))
   )
 
 
+;;:= TODO: cannot accept several keywords, fix it
 (defn write-keyword-sentence [ls keyword path]
   "write keyword content in level"
   (let [realpath (if (.isDirectory (io/file path))
-                   (do (printf "%s is a directory, write in $PATH/project.org"
+                   (do (printf "%s is a directory, write in $(pwd)/project.org"
                                path)
                        (str path "/project.org"))
                    path)]
@@ -76,7 +93,7 @@ return ((linenum \"keyword content\")..)
               (if (not (empty? lines))
                 (do (.write wrtr (str "* " filepath "\n\n"))
                     (doseq [line lines]
-                      (.write wrtr (str "** " keyword " " (format-content line) "\n")))
+                      (.write wrtr (str "** " (format-content line) "\n")))
                     (.write wrtr "\n")))
               ;;if not keyword input, write all
               (do (.write wrtr (str "* " filepath "\n\n"))

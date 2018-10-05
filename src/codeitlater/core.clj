@@ -63,7 +63,7 @@
   "check file is hidden file or not"
   (if (re-find #"#.*$" filepath) true nil))
 
-;;;:= TODO: doc
+
 (defn read-files
   "Read all files depend on root path and file types, find comments inside and return.
   return value should be:
@@ -100,8 +100,7 @@
                                       (not (or (.isDirectory (io/file %))
                                                (is-hidden-file? %)))
                                       (re-matches (first typepattern) %))
-                                    (get-all-files root)))))))
-   ))
+                                    (get-all-files root)))))))))
 
 
 (defn -main [& args]
@@ -115,6 +114,7 @@
          orgpath   :org} options
         commentdict (into (read-json jsonpath) (read-json jsonpathx))
 
+        ;;cache content
         content (if filetypes
                   ;;:= TODO: when have file type(s)
                   (read-files commentdict dir (str/split filetypes #" "))
@@ -133,5 +133,6 @@
       :else
       (cilformat/list2tree content keyword)
       )
+    
     ;; https://stackoverflow.com/questions/36251800/what-is-clojures-flush-and-why-is-it-necessary
     (flush)))
