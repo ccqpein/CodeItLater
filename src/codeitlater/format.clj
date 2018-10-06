@@ -15,13 +15,13 @@
 (defn split-keywords [keywords]
   ;;:= TODO: test
   ;;:= MARK: test
-  "if input several keywords, should cut it to \"[keyword1|keyword2]\".
+  "if input several keywords, should cut it to \"(keyword1|keyword2)\".
 Or, just return \"keyword\""
   (if (nil? keywords)
     nil
     (let [tempResult (str/split keywords #" ")]
       (if (> (count tempResult) 1)
-        (clojure.pprint/cl-format nil "[~{~a~^|~}]" tempResult)
+        (clojure.pprint/cl-format nil "(~{~a~^|~})" tempResult)
         (first tempResult)))))
 
 
@@ -61,6 +61,7 @@ return ((linenum \"keyword content\")..)
             [filepath & tuples] thisls]
         (if keyword
           (print-with-keyword filepath tuples keyword)
+          ;;(printline filepath (check-keyword-content tuples keyword))
           (printline filepath tuples)
           )
         ;;(println)
@@ -75,6 +76,7 @@ return ((linenum \"keyword content\")..)
 
 
 ;;:= TODO: cannot accept several keywords, fix it
+;;:= TEST: test
 (defn write-keyword-sentence [ls keyword path]
   "write keyword content in level"
   (let [realpath (if (.isDirectory (io/file path))
@@ -82,6 +84,7 @@ return ((linenum \"keyword content\")..)
                                path)
                        (str path "/project.org"))
                    path)]
+    (println keyword)
     (with-open [wrtr (io/writer realpath)]
       (loop [listset ls]
         (if (not (empty? listset))
