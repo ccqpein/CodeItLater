@@ -90,6 +90,11 @@ You will get:
   |-- (4 "MARK: you can left keyword to marked comment line")
 ```
 
+Same format as filetypes, if you want get two keywords together:
+
+`codeitlater -k "TODO MARK"`
+
+
 #### Output to Org file ####
 
 Give `-o` to let codeitlater write result to org-file. 
