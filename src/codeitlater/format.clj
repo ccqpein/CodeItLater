@@ -5,10 +5,16 @@
 
 
 (defn printline [filepath tuples]
-  "tuple => ((linenum string)...)"
+  "tuple => ((linenum string)...) ;;from no keyword branch
+OR tuple => ((linenum [keyword content])...)"
   (do
     (printf "|-- %s\n" filepath)
-    (doall (map #(printf "  |-- %s\n" %) tuples))
+    (doall (map #(printf "  |-- Line %d: %s\n"
+                         (first %)
+                         (if (= java.lang.String (type (second %)))
+                           (second %)
+                           (clojure.string/join " " (second %))))
+                tuples))
     (println)))
 
 
@@ -23,18 +29,6 @@ Or, just return \"keyword\""
       (if (> (count tempResult) 1)
         (clojure.pprint/cl-format nil "(~{~a~^|~})" tempResult)
         (first tempResult)))))
-
-
-;;;most part of this function looks duplicated with check-keyword-content
-;;;:= TODO: re-write it
-(defn print-with-keyword [filepath tuples keyword]
-  (let [filter-content (filter #(-> (str "(?<=" (split-keywords keyword) ":" ").*$")
-                                    (re-pattern)
-                                    (re-find (second %)))
-                               tuples)]
-    (if (not (empty? filter-content))
-      (printline filepath filter-content)
-      )))
 
 
 (defn check-keyword-content [tuples keyword]
@@ -60,8 +54,8 @@ return ((linenum \"keyword content\")..)
       (let [thisls (first listset)
             [filepath & tuples] thisls]
         (if keyword
-          (print-with-keyword filepath tuples keyword)
-          ;;(printline filepath (check-keyword-content tuples keyword))
+          ;;(print-with-keyword filepath tuples keyword)
+          (printline filepath (check-keyword-content tuples keyword))
           (printline filepath tuples)
           )
         ;;(println)
@@ -84,7 +78,6 @@ return ((linenum \"keyword content\")..)
                                path)
                        (str path "/project.org"))
                    path)]
-    (println keyword)
     (with-open [wrtr (io/writer realpath)]
       (loop [listset ls]
         (if (not (empty? listset))
