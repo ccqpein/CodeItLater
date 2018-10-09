@@ -7,15 +7,16 @@
 (defn printline [filepath tuples]
   "tuple => ((linenum string)...) ;;from no keyword branch
 OR tuple => ((linenum [keyword content])...)"
-  (do
-    (printf "|-- %s\n" filepath)
-    (doall (map #(printf "  |-- Line %d: %s\n"
-                         (first %)
-                         (if (= java.lang.String (type (second %)))
-                           (second %)
-                           (clojure.string/join " " (second %))))
-                tuples))
-    (println)))
+  (if (not (empty? tuples))
+    (do
+      (printf "|-- %s\n" filepath)
+      (doall (map #(printf "  |-- Line %d: %s\n"
+                           (first %)
+                           (if (= java.lang.String (type (second %)))
+                             (second %)
+                             (clojure.string/join " " (second %))))
+                  tuples))
+      (println))))
 
 
 (defn split-keywords [keywords]
