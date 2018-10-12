@@ -1,4 +1,4 @@
-(defproject codeitlater "0.1.3"
+(defproject codeitlater "1.2.1"
   :description "Track bread crumbs left in code."
   :url "https://github.com/ccqpein/codeitlater"
   :license {:name "Apache License"
