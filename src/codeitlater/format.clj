@@ -3,7 +3,7 @@
   (:require [clojure.java.io :as io])
   )
 
-
+;;;print it to terminal
 (defn printline [filepath tuples]
   "tuple => ((linenum string)...) ;;from no keyword branch
 OR tuple => ((linenum [keyword content])...)"
