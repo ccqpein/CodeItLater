@@ -80,6 +80,8 @@ Run `codeitlater -d /user/src/` let codeitlater just scan specific path.
 
 #### Filter keyword ####
 
+Keyword format is `Keyword:` with a space after.
+
 Filter keyword (use -k be keyword flag, check out more flags by -h):
 `codeitlater -k MARK`
 
