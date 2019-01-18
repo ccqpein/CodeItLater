@@ -1,5 +1,10 @@
 # CodeItLater
 
+**other versions:**
+
++ [code_it_later_ml](https://github.com/ccqpein/code_it_later_ml) ocaml version
++ [code_it_later_hs](https://github.com/ccqpein/code_it_later_hs) haskell version
+
 ## Summary
 Make flags in source code where may have problems or can be optimized. codeitlater help you track this flags and fix them in future.
 
